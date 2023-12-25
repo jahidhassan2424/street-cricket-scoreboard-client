@@ -1,0 +1,32 @@
+.team1Name {
+    border: 0px solid black;
+    background: #373636;
+    color: white;
+}
+
+.run {
+    border: 0px solid black;
+    background: red;
+    color: white;
+}
+
+.batsman {
+    border: 0px solid black;
+    height: 100%;
+    border-radius: 10px;
+    text-align: center;
+    align-items: center;
+    background: #373636;
+    color: white;
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+.teamInfoContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.runInBall span {
+    display: block;
+}
