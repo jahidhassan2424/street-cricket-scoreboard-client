@@ -16,6 +16,7 @@ import Root from './routes/root';
 import ErrorPage from './routes/error-page';
 // import Home from './components/Home/Home';
 import Login from './components/Login/Login';
+import Manage from './components/Home/Controller/Manage';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
           <Route Route path='' element={<Home />} />
           <Route Route path='home' element={<Home />} />
           <Route Route path='login' element={<Login />} />
+          <Route Route path='manage' element={<Manage />} />
         </Route>
       </>
     </>

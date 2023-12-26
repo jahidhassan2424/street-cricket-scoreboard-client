@@ -1,7 +1,7 @@
 import React from 'react'
-import style from "./Controller.module.css"
+import style from "./Manage.module.css"
 
-export default function Controller() {
+export default function Manage() {
     const runs = [
         {
             label: "0",
