@@ -63,30 +63,93 @@ export default function Manage() {
         console.log(run);
     }
     return (
-        <div>
+        <div className={`mx-[10%] `}>
+
+            <h1 className='text-6xl text-center font-bold mb-10'>Scoreboard Control Center</h1>
             {/* Add runs */}
             <div>
-                <div className={`flex flex-row gap-2 `}>
-                    {
-                        runs.map((run, index) =>
-                            <span onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl `}>
-                                {run.label}
+                <div className={` border border-1 shadow-lg p-5 rounded-lg bg-zinc-200`}>
+                    <h1 className='text-3xl mb-4'>Manage Runs</h1>
+                    <div className={`flex flex-row gap-2 `}>
+                        {
+                            runs.map((run, index) =>
+                                <span onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl border-black`}>
+                                    {run.label}
 
-                            </span>)
-                    }
+                                </span>)
+                        }
+                    </div>
                     <br />
                     <br />
-                </div>
-                <div className={`flex flex-row gap-2 mt-10`}>
-                    {
-                        exception.map((run, index) =>
-                            <p onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl `}>
-                                {run.label}
+                    <div className={`flex flex-row gap-2 mt-2`}>
+                        {
+                            exception.map((run, index) =>
+                                <p onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl  border-black`}>
+                                    {run.label}
 
-                            </p>)
-                    }
+                                </p>)
+                        }
+                    </div>
                 </div>
             </div>
+            <table className={`${style.table} mt-5`}>
+                <div className={`flex justify-between`}>
+                    <div>
+                        <tr>
+                            <td>Edit Total Run: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Edit Total Wicket: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Current Player 1: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Current Player 2: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Total Balls: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                    </div>
+                    <div>
+                        <tr>
+                            <td>Current Playing Team </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Edit Total Wicket: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Current Player 1: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Current Player 2: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                        <tr>
+                            <td>Total Balls: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+                    </div>
+                </div>
+            </table>
         </div>
     )
 }

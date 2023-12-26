@@ -1,10 +1,12 @@
 import { Outlet } from 'react-router';
 import './App.css';
 import Home from './components/Home/Home';
+import Nav from './components/Nav/Nav';
 
 function App() {
   return (
-    <div className="App ">
+    <div className="App bg-[#DDDDDD] pb-10 h-[100vh]">
+      <Nav />
       <Outlet />
     </div>
   );

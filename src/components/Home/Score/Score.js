@@ -13,6 +13,10 @@ export default function Score() {
         }
     ];
     const currentStatus = {
+        playingTeam: {
+            team1: "REBEL",
+            team2: "TITAN"
+        },
         battingTeam: "Team Rebel",
         innings: 1,
         currentBowlerIndex: 0,
@@ -32,9 +36,6 @@ export default function Score() {
             },
         },
         totalBall: 56,
-        numberOfOver: 0,
-        team1Name: "NZ",
-        team2name: "BAN",
         totalRun: 0,
         totalWicket: 1
     }
@@ -47,7 +48,7 @@ export default function Score() {
                 return;
             }
         }
-}
+    }
     const ballToOver = (ball) => {
         return Math.round((ball / 6) * 10) / 10;
     };
@@ -72,8 +73,8 @@ export default function Score() {
 
                     {currentStatus.innings === 2 &&
                         <div className={`text-3xl flex flex-col mt-5 gap-3`}>
-                            <p className={`${style.batsman}`}>Batsman 1</p>
-                            <p className={`${style.batsman}`}>Batsman 2</p>
+                            <p className={`${style.batsman}`}>{batsman1.name}</p>
+                            <p className={`${style.batsman}`}>{batsman2.name}</p>
                         </div>
                     }
                 </div>
@@ -82,8 +83,8 @@ export default function Score() {
                 {currentStatus.innings === 1 ?
                     <div className={`h-[100%]  flex flex-col items-center justify-center`}>
                         <div className={`text-3xl flex flex-col mt-5 gap-3 w-full`}>
-                            <p className={`${style.batsman} w-full `}>Batsman 1</p>
-                            <p className={`${style.batsman} w-full `}>Batsman 2</p>
+                            <p className={`${style.batsman} w-full `}>{batsman1.name}</p>
+                            <p className={`${style.batsman} w-full `}>{batsman2.name}</p>
                         </div>
                         <div className={`text-3xl flex justify-center mt-3 mb-10`}>
                             <div className={` flex w-[100%] justify-between items-center h-[100%] pb-4 gap-1 `}>
@@ -140,7 +141,7 @@ export default function Score() {
             </div>
             <div className={`my-5`}>
                 <div className={`mx-[10%] my-2 bg-white  text-center rounded-lg`}>
-                    <h1 className='text-7xl p-5'>Team 1 vs Team 2</h1>
+                    <h1 className='text-7xl p-5 font-bold '>{currentStatus.playingTeam.team1} vs {currentStatus.playingTeam.team2} </h1>
                 </div>
             </div>
         </div>

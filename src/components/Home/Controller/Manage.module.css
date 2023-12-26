@@ -1,3 +1,39 @@
 .runs:hover {
-    background: #d9d8d8;
+    background: #4b4b4b;
+    color: white;
+}
+
+.table {
+    font-size: 20px;
+}
+
+.table button {
+    font-size: 20px;
+}
+
+.table tr {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-items: center;
+}
+
+.table input {
+    border: 1px solid black;
+}
+
+.buttonContainer {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+    height: 80%;
+    background: #373636;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.table td {
+    margin: 0 2%;
 }

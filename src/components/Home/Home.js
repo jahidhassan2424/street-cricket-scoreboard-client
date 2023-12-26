@@ -16,19 +16,11 @@ export default function Home() {
     } else {
         localStorage.setItem("userEmail", user?.email);
     }
-    const handleSignout = () => {
-        const confirm = window.confirm("Are you trying to sign out?");
-        if (confirm) {
-            signOut(auth);
-            navigate("/login");
-        }
-    }
+
     return (
         <div className={`bg-[#DDDDDD] pb-10 h-[100vh]`}>
             {/* <Controller /> */}
-            <div onClick={() => handleSignout()} className={`text-right mt-2`}>
-                <span className={` py-1 px-4 rounded-xl  w-[fit] text-zinc-300 hover:bg-black`}>Signout</span>
-            </div>
+
             <Score />
         </div>
     )

@@ -1,0 +1,12 @@
+.navContainer:hover div>* {
+    color: black;
+}
+
+.navContainer div:hover {
+    background-color: #000;
+    border-radius: 10px;
+}
+
+.navContainer div:hover>* {
+    color: white;
+}
