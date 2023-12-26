@@ -5,7 +5,7 @@ import Nav from './components/Nav/Nav';
 
 function App() {
   return (
-    <div className="App bg-[#DDDDDD] pb-10 h-[100vh]">
+    <div className="App bg-[#DDDDDD] pb-10 h-[500vh]">
       <Nav />
       <Outlet />
     </div>

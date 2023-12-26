@@ -1,5 +1,7 @@
 import React from 'react'
 import style from "./Manage.module.css"
+import { SERVER_URL } from '../../../variable'
+import axios from 'axios'
 
 export default function Manage() {
     const runs = [
@@ -62,6 +64,53 @@ export default function Manage() {
     const addRun = (run) => {
         console.log(run);
     }
+    const currentStatus = {
+        playingTeam: {
+            team1: "REBEL",
+            team2: "TITAN"
+        },
+        battingTeam: "Team Rebel",
+        innings: 1,
+        currentBowlerIndex: 0,
+        onStrikeBatsman: "",
+        currentTwoBatsmanInField: {
+            batsman1: {
+                name: "Player 1",
+                run: 0,
+                ballPlayed: 0,
+                onStrike: true
+            },
+            batsman2: {
+                name: "Player 2",
+                run: 0,
+                ballPlayed: 0,
+                onStrike: false
+            },
+        },
+        totalBall: 56,
+        totalRun: 0,
+        totalWicket: 1
+    }
+
+
+    const changeFirstTeamName = (name) => {
+        if (name !== "") {
+            axios.post(`${SERVER_URL}/status/firstTeamName/:${name}`, {
+            }, {
+                headers: {
+                    authorization: localStorage.getItem('userEmail')
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(function (e) {
+                    console.log(e)
+                })
+        } else {
+            window.prompt("Empty value won't be accepted!");
+        }
+    }
     return (
         <div className={`mx-[10%] `}>
 
@@ -92,8 +141,9 @@ export default function Manage() {
                     </div>
                 </div>
             </div>
-            <table className={`${style.table} mt-5`}>
-                <div className={`flex justify-between`}>
+            <h1 className='text-3xl mt-10'>Edit Values</h1>
+            <table className={`${style.table} mt-5 shadow-xl `}>
+                <div className={`flex justify-between p-8`}>
                     <div>
                         <tr>
                             <td>Edit Total Run: </td>
@@ -148,6 +198,45 @@ export default function Manage() {
                             <td className={`${style.buttonContainer}`}><button>Change</button></td>
                         </tr>
                     </div>
+                </div>
+            </table>
+
+
+            <h1 className='text-3xl mt-10'>Set Match Default</h1>
+            <table className={`${style.table} mt-5 shadow-xl `}>
+                <div className={`flex justify-between p-8`}>
+                    <div>
+
+                        {/* First Team  */}
+                        <tr>
+                            <td>First Team Name </td>
+                            <td><input type='text' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+
+                        {/* Second Team */}
+                        <tr>
+                            <td>Second Team Name </td>
+                            <td><input type='text' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+
+                        {/* Total Over */}
+                        <tr>
+                            <td>Total Over: </td>
+                            <td><input type='Number' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+
+                        {/* Batting Team */}
+                        <tr>
+                            <td>Batting Team: </td>
+                            <td><input type='text' placeholder='' /> </td>
+                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
+                        </tr>
+
+                    </div>
+
                 </div>
             </table>
         </div>
