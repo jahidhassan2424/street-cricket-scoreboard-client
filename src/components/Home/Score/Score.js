@@ -50,67 +50,61 @@ export default function Score() {
         return Math.round((ball / 6) * 10) / 10;
     };
 
+    // const undoBall
+
     return (
         <div className={`w-full `}>
-            <div className={`absolute bottom-0 text-center m-2 w-full`}>
-                <div className={`${style.teamInfoContainer} `}>
-
-                    <div>
-                        {/* Batting Team */}
-                        <div className={`flex flex-row `}>
-                            <div className={`${style.team1Name} border-1 border-zinc-500 border p-5 rounded-lg min-w-[20%]`}>
-                                <p className={`font-bold text-6xl`}>{currentStatus.team1Name}</p>
-                            </div>
-                            <div className={`${style.run} border-1 border-zinc-500 border p-5 rounded-lg min-w-[20%]`}>
-                                <p className={`font-bold text-6xl`}>{currentStatus.totalRun}-{currentStatus.totalWicket}</p>
-                                <p>({ballToOver(currentStatus.numberOfBall)})</p>
-                            </div>
-                            {/* Batsman */}
-                            <div className={`grid grid-flow-row items-center min-w-[20%]`}>
-                                <div className={`${style.batsman} flex flex-row gap-16 `}>
-                                    <p>{batsman1.name} {batsman1.onStrike && "*"}</p>
-                                    <p>{batsman1.run} ({batsman1.ballPlayed})</p>
-                                </div>
-                                <div className={`${style.batsman} flex flex-row gap-16 `}>
-                                    <p>{batsman2.name} {batsman2.onStrike && "*"}</p>
-                                    <p>{batsman2.run} ({batsman2.ballPlayed})</p>
-                                </div>
+            <h1 className='text-6xl font-bold text-center my-5'>BAS CRICKET TOURNAMENT SCOREBOARD</h1>
+            <div className={`grid grid-cols-2 gap-10 mx-[10%] ${style.cardContainer}`}>
+                {/* Left Side */}
+                <div>
+                    <div className={`${style.card} h-[55vh]`}>
+                        <div>
+                            <h1 className={`${style.teamLabel}`}>Team Rebel</h1>
+                            <div className={`${style.runInCard}`}>
+                                <h1 className='text-[12rem] text-center'>5-0</h1>
                             </div>
                         </div>
                     </div>
-
-                    {/* Bowing Team */}
-                    <div className={`flex justify-end m-5 gap-5 `}>
-                        <div className={`min-w-[30%]`}>
-                            <div className={`flex flex-row justify-between gap-16 items-start`}>
-                                <p className={`text-2xl`}>{bowlersInfo[currentStatus.currentBowlerIndex].name}</p>
-                                <p className={`text-2xl`}>
-                                    {bowlersInfo[currentStatus.currentBowlerIndex].wicketTaken}
-                                    -{bowlersInfo[currentStatus.currentBowlerIndex].totalRunGiven}({ballToOver(bowlersInfo[currentStatus.currentBowlerIndex].totalBallThrown)})</p>
-                            </div>
-                            <div className={` flex w-[full] justify-between items-center h-[100%] pb-4 `}>
-                                {
-                                    runInCurrentOver.map((ball, index) =>
-                                        <span className={`bg-black rounded-full text-white px-2 font-bold text-3xl`}>
-
-                                            {ball === -1 ?
-                                                <p className={`text-black`}>0</p>
-                                                :
-                                                ball
-                                            }
-
-                                        </span>
-                                    )
-                                }
-
-                            </div>
-                        </div>
-                        <div className={`${style.team1Name} border-1 border-zinc-500 border p-5 rounded-lg min-w-[20%]`}>
-                            <p className={`font-bold text-6xl`}>{currentStatus.team2name}</p>
-                        </div>
+                    <div className={`text-3xl flex flex-col mt-5 gap-3`}>
+                        <p className={`${style.batsman}`}>Batsman 1</p>
+                        <p className={`${style.batsman}`}>Batsman 2</p>
                     </div>
                 </div>
 
+                {/* Right Side */}
+                <div>
+                    <div className={`${style.card} h-[55vh]`}>
+                        <h1 className={`${style.teamLabel}`}>To Win</h1>
+                        <div className={` grid grid-cols-2 text-center gap-10 h-[70%] justify-center items-center`}>
+                            <div className={`${style.runInCard} p-2`}>
+                                <p className={`text-7xl font-semibold mb-10`}>Runs</p>
+                                <p className={`text-7xl`}>100</p>
+                            </div>
+                            <div className={`${style.runInCard} p-2`}>
+                                <p className={`text-7xl font-semibold mb-10`}>Balls</p>
+                                <p className={`text-7xl`}>80</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={`text-3xl flex justify-center mt-3 mb-10`}>
+                        <div className={` flex w-[100%] justify-between items-center h-[100%] pb-4 `}>
+                            {
+                                runInCurrentOver.map((ball, index) =>
+                                    <span className={`bg-black rounded-full text-white px-5 py-6 font-bold text-[4rem]`}>
+
+                                        {ball === -1 ?
+                                            <p className={`text-black`}>0</p>
+                                            :
+                                            ball
+                                        }
+
+                                    </span>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )

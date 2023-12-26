@@ -6,8 +6,10 @@ import Controller from './Controller/Controller'
 export default function Home() {
     return (
         <div>
-            <Controller />
+            {/* <Controller /> */}
             <Score />
         </div>
     )
 }
+
+
