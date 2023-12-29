@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -17,6 +17,7 @@ import ErrorPage from './routes/error-page';
 // import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import Manage from './components/Home/Controller/Manage';
+import { DataProvider } from './components/Context/DataProvider';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -35,7 +36,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router}>
-      <App />
+      <DataProvider>
+        <App />
+      </DataProvider>
     </RouterProvider>
   </React.StrictMode>
 );

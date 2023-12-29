@@ -1,9 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from "./Manage.module.css"
-import { SERVER_URL } from '../../../variable'
+import { SERVER_URL, refetch } from '../../../variable'
 import axios from 'axios'
+import { useForm, SubmitHandler } from "react-hook-form"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import auth from '../../../firebase.init'
+import { useData } from '../../Context/DataProvider'
 
 export default function Manage() {
+    const [user] = useAuthState(auth);
+    const [currentStatus, setCurrentStatus] = useState({})
+    const { refetch, setRefetch, fetchData } = useData();
+    const [disableBtn, setDisableBtn] = useState(false);
+    useEffect(() => {
+        if (refetch) {
+            fetchData();
+            setRefetch(false);
+        }
+    }, [refetch, setRefetch, fetchData]);
+
     const runs = [
         {
             label: "0",
@@ -60,57 +75,126 @@ export default function Manage() {
             }
         ]
 
-
-    const addRun = (run) => {
-        console.log(run);
+    const reEnableButton = () => {
+        setTimeout(() => {
+            setDisableBtn(false);
+        }, 1000);
     }
-    const currentStatus = {
-        playingTeam: {
-            team1: "REBEL",
-            team2: "TITAN"
-        },
-        battingTeam: "Team Rebel",
-        innings: 1,
-        currentBowlerIndex: 0,
-        onStrikeBatsman: "",
-        currentTwoBatsmanInField: {
-            batsman1: {
-                name: "Player 1",
-                run: 0,
-                ballPlayed: 0,
-                onStrike: true
-            },
-            batsman2: {
-                name: "Player 2",
-                run: 0,
-                ballPlayed: 0,
-                onStrike: false
-            },
-        },
-        totalBall: 56,
-        totalRun: 0,
-        totalWicket: 1
-    }
-
-
-    const changeFirstTeamName = (name) => {
-        if (name !== "") {
-            axios.post(`${SERVER_URL}/status/firstTeamName/:${name}`, {
-            }, {
-                headers: {
-                    authorization: localStorage.getItem('userEmail')
-                }
+    const addRun = (value) => {
+        setDisableBtn(true);
+        axios.post(`${SERVER_URL}/increaseRun/${value}`, {}, {
+            headers: {
+                authorization: user?.email || "none"
+            }
+        })
+            .then(res => {
+                reEnableButton();
+                console.log("Response: ", res);
+                setRefetch(!refetch);
             })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(function (e) {
-                    console.log(e)
-                })
-        } else {
-            window.prompt("Empty value won't be accepted!");
-        }
+            .catch(function (e) {
+                reEnableButton();
+                console.log(e)
+            })
     }
+    const addException = (value, label) => {
+        setDisableBtn(true);
+        reEnableButton();
+        axios.post(`${SERVER_URL}/addException`, { value, label }, {
+            headers: {
+                authorization: user?.email || "none"
+            }
+        })
+            .then(res => {
+                reEnableButton();
+                console.log("Response: ", res);
+                setRefetch(!refetch);
+
+
+            })
+            .catch(function (e) {
+                reEnableButton();
+                console.log(e)
+            })
+    }
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+
+    const onSubmit = (data) => {
+
+        if (data !== "") {
+            if ((data.battingTeam === data.firstTeamName || data.battingTeam === data.secondTeamName)) {
+                axios.post(`${SERVER_URL}/currentStatus`, {
+                    data: data
+                },
+                    {
+                        headers: {
+                            authorization: localStorage.getItem('userEmail')
+                        }
+                    })
+                    .then(res => {
+                        console.log(res);
+                    })
+                    .catch(function (e) {
+                        console.log(e)
+                    })
+            } else {
+                window.alert("Batting Team do not exists. Have to be one of two playing team ")
+                return;
+            }
+        }
+        else {
+            window.alert("Empty value won't be accepted!");
+            return;
+        }
+
+    }
+
+    const getStatus = () => {
+        console.log(user?.email)
+        axios.get(`${SERVER_URL}/currentStatus`, {
+            headers: {
+                authorization: user?.email || "None"
+            }
+        }
+        )
+            .then(res => {
+                console.log("response: ", res.data);
+                setCurrentStatus(res.data);
+            })
+            .catch(function (e) {
+                console.log(e)
+            })
+    }
+    // console.log(currentStatus?.totalRun);
+    useEffect(() => {
+        getStatus();
+    }, [user])
+
+    const form2 = useForm();
+    const { handleSubmit: handleSubmit2, register: register2 } = form2;
+
+    const onSubmitForm2 = (data) => {
+        console.log(data);
+        axios.post(`${SERVER_URL}/changeStatus`, { data: data }, {
+            headers: {
+                authorization: user?.email || "none"
+            }
+        })
+            .then(res => {
+                console.log("Response: ", res);
+                setRefetch(!refetch);
+
+            })
+            .catch(function (e) {
+                console.log(e)
+            })
+    };
+
     return (
         <div className={`mx-[10%] `}>
 
@@ -122,123 +206,108 @@ export default function Manage() {
                     <div className={`flex flex-row gap-2 `}>
                         {
                             runs.map((run, index) =>
-                                <span onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl border-black`}>
+                                <button disabled={disableBtn} onClick={() => addRun(run.value)} className={`${style.runs} shadow-lg rounded-full px-6 py-4 text-2xl border-black`}>
                                     {run.label}
 
-                                </span>)
+                                </button>)
                         }
                     </div>
                     <br />
                     <br />
                     <div className={`flex flex-row gap-2 mt-2`}>
                         {
-                            exception.map((run, index) =>
-                                <p onClick={() => addRun(run.value)} className={`${style.runs} border border-1 rounded-full px-6 py-4 text-2xl  border-black`}>
-                                    {run.label}
-
-                                </p>)
+                            exception.map((item, index) =>
+                                <button disabled={disableBtn} onClick={() => addException(item.value, item.label)} className={`${style.runs} shadow-lg rounded-full px-6 py-4 text-2xl  border-black`}>
+                                    {item.label}
+                                </button>)
                         }
                     </div>
                 </div>
             </div>
             <h1 className='text-3xl mt-10'>Edit Values</h1>
-            <table className={`${style.table} mt-5 shadow-xl `}>
-                <div className={`flex justify-between p-8`}>
-                    <div>
-                        <tr>
-                            <td>Edit Total Run: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Edit Total Wicket: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Current Player 1: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Current Player 2: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Total Balls: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
+            <form onSubmit={handleSubmit2(onSubmitForm2)}>
+                <table className={`${style.table} mt-5 shadow-xl `}>
+                    <div className={`flex justify-between p-8`}>
+                        <div>
+                            <tr>
+                                <td>Edit Total Run: </td>
+                                <td><input type='number' defaultValue={currentStatus?.totalRun} placeholder={currentStatus?.totalRun} {...register2("totalRun")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button>Change</button></td> */}
+                            </tr>
+                            <tr>
+                                <td>Edit Total Wicket: </td>
+                                <td><input type='number' defaultValue={currentStatus?.totalWicket} placeholder={currentStatus?.totalWicket} {...register2("totalWicket")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button>Change</button></td> */}
+                            </tr>
+                            <tr>
+                                <td>Current Player 1: </td>
+                                <td><input type='text' defaultValue={currentStatus?.currentTwoBatsmanInField?.batsman1?.name} placeholder={currentStatus?.currentTwoBatsmanInField?.batsman1?.name || "Empty"} {...register2("batsman1")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button>Change</button></td> */}
+                            </tr>
+                            <tr>
+                                <td>Current Player 2: </td>
+                                <td><input type='text' defaultValue={currentStatus?.currentTwoBatsmanInField?.batsman2?.name} placeholder={currentStatus?.currentTwoBatsmanInField?.batsman2?.name || "Empty"} {...register2("batsman2")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button>Change</button></td> */}
+                            </tr>
+                            <tr>
+                                <td>Total Balls: </td>
+                                <td><input type='number' defaultValue={currentStatus?.totalBall} placeholder={currentStatus?.totalBall} {...register2("totalBall")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button>Change</button></td> */}
+                            </tr>
+                        </div>
+                        <div>
+                            <tr>
+                                <td>Batting Team: </td>
+                                <td><input type='text' defaultValue={currentStatus?.playingTeam?.team1} placeholder={currentStatus?.playingTeam?.team1} {...register2("battingTeam")} /> </td>
+                                {/* <td className={`${style.buttonContainer}`}><button disabled={true}>Change</button></td> */}
+                            </tr>
+
+                            <input type="submit" />
+                        </div>
                     </div>
-                    <div>
-                        <tr>
-                            <td>Current Playing Team </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Edit Total Wicket: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Current Player 1: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Current Player 2: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                        <tr>
-                            <td>Total Balls: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
-                    </div>
-                </div>
-            </table>
+                </table>
+            </form>
 
 
             <h1 className='text-3xl mt-10'>Set Match Default</h1>
-            <table className={`${style.table} mt-5 shadow-xl `}>
-                <div className={`flex justify-between p-8`}>
-                    <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <table className={`${style.table} mt-5 shadow-xl `}>
+                    <div className={`flex justify-between p-8 flex-col w-[70%]`}>
+                        <div>
 
-                        {/* First Team  */}
-                        <tr>
-                            <td>First Team Name </td>
-                            <td><input type='text' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
+                            {/* First Team  */}
+                            <tr>
+                                <td>First Team Name </td>
+                                <td><input type='text' placeholder='' {...register("firstTeamName")} /> </td>
+                            </tr>
 
-                        {/* Second Team */}
-                        <tr>
-                            <td>Second Team Name </td>
-                            <td><input type='text' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
+                            {/* Second Team */}
+                            <tr>
+                                <td>Second Team Name </td>
+                                <td><input type='text' placeholder='' {...register("secondTeamName")} /> </td>
+                            </tr>
 
-                        {/* Total Over */}
-                        <tr>
-                            <td>Total Over: </td>
-                            <td><input type='Number' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
+                            {/* Total Over */}
+                            <tr>
+                                <td>Total Over: </td>
+                                <td><input type='Number' placeholder='' {...register("totalOver")} /> </td>
+                            </tr>
 
-                        {/* Batting Team */}
-                        <tr>
-                            <td>Batting Team: </td>
-                            <td><input type='text' placeholder='' /> </td>
-                            <td className={`${style.buttonContainer}`}><button>Change</button></td>
-                        </tr>
+                            {/* Batting Team */}
+                            <tr>
+                                <td>Batting Team: </td>
+                                <td><input type='text' placeholder='' {...register("battingTeam")} /> </td>
+                            </tr>
 
-                    </div>
+                        </div>
+                        <div className={`w-[70%] p-8`}>
+                            <input className={`bg-[#4b4b4b] text-white`} type='submit'></input>
 
-                </div>
-            </table>
-        </div>
+                        </div>
+                    </div >
+                </table >
+            </form >
+
+        </div >
     )
 }

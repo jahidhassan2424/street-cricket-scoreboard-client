@@ -7,7 +7,7 @@ import auth from '../../firebase.init'
 import { useNavigate } from 'react-router'
 import { signOut } from 'firebase/auth'
 
-export default function Home() {
+export default function Home({ setRefetch, refetch }) {
     const navigate = useNavigate();
     const [user] = useAuthState(auth);
     if (!user) {
@@ -21,7 +21,7 @@ export default function Home() {
         <div className={`bg-[#DDDDDD] pb-10 h-[100vh]`}>
             {/* <Controller /> */}
 
-            <Score />
+            <Score setRefetch={setRefetch} refetch={refetch} />
         </div>
     )
 }

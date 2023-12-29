@@ -1,6 +1,17 @@
+.runs {
+    border: 0px solid grey;
+    background-color: rgb(208, 207, 207);
+}
+
 .runs:hover {
     background: #4b4b4b;
     color: white;
+}
+
+.runs:disabled {
+    background: #c3c3c3;
+    color: white;
+    border-width: 0px;
 }
 
 .table {
